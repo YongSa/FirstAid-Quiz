@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="de">
+	<head>
+		<title>FirstAid</title>
+		<meta content="text/html; charset=UTF-8" http-equiv="content-type">
+		<meta name="description" content="">
+		<meta name="keywords" content="">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="css/style.css">	
+		<link href="images/favicon.ico" type="image/x-icon" rel="icon">
+		<script type="text/javascript" src="js/external/mootools-core-1.4.5-minified.js"></script>
+		<script type="text/javascript" src="js/dg-quiz-maker.js"></script>
+	</head>
+	<body>
+		<header>
+			<div class="header-line"></div>
+			<h1>Hier: Timer</h1>
+			<div class="blank-line"></div>
+			<div class="blank-space"></div>			
+		</header>
+		<div class="main">
+			<div class="content">
+				<img class="inner-circle" src="images/CAT-Gen-7-Black.jpg"/>
+				<img class="inner-circle" src="images/Guedel-Tubus.jpg"/>
+				<img class="inner-circle" src="images/autoinjektor.jpg"/>
+				<img class="inner-circle" src="images/hartmann_notfall-druckverband_zivil_web.jpg"/>
+				<div id="quiz">
+					<div id="questions"></div>
+					<div id="error"></div>
+					<div id="result"></div>
+				</div>
+			</div>
+		</div>
+		<footer>
+			<div class="blank-space"></div>	
+			<div class="blank-line"></div>
+			<div class="navigation-bar">
+				<a class="active" href="index.html">
+					<img src="images/tasks.jpg"/>
+				</a>
+				<a href="stats.html">
+					<img src="images/graph.png"/>
+				</a>
+				<a href="profile.html">
+					<img src="images/profile.png"/>
+				</a>			
+			</div>
+		</footer>
+		<script type="text/javascript">
+			function showWrongAnswer(){
+				document.id('error').set('html', 'Falsche Antwort. Versuchen Sie es nochmal');
+			}
+			function showScore() {
+				var score = quizMaker.getScore();
+
+				var el = new Element('h3');
+				el.set('html', 'Einheit beendet!');
+				document.id('result').adopt(el);
+
+				el = new Element('h4');
+				el.set('html', 'Punktzahl: ' + score.numCorrectAnswers + ' von ' + score.numQuestions);
+				document.id('result').adopt(el);
+
+				if(score.incorrectAnswers.length > 0) {
+					el = new Element('h4');
+					el.set('html', 'Falsche Antworten :');
+					document.id('result').adopt(el);
+
+					for(var i=0;i<score.incorrectAnswers.length;i++) {
+						var incorrectAnswer = score.incorrectAnswers[i];
+						el = new Element('div');
+						el.set('html', '<b>' +  incorrectAnswer.questionNumber + ': ' + incorrectAnswer.label + '</b>');
+						document.id('result').adopt(el);
+
+						el = new Element('div');
+						el.set('html', 'Richtige Antwort : ' + incorrectAnswer.correctAnswer);
+						document.id('result').adopt(el);
+						el = new Element('div');
+						el.set('html', 'Ihre Antwort : ' + incorrectAnswer.userAnswer);
+						document.id('result').adopt(el);
+					}
+				}
+			}
+			var questions = [
+				{
+					label : 'Welches dieser Bilder zeigt einen Tourniquet?',
+					options : ['a', 'b', 'c', 'd'],
+					answer : ['a'],
+					forceAnswer : true
+				}
+			]
+
+			function showAnswerAlert() {
+				document.id('error').set('html', 'Sie müssen diese Frage zuerst beantworten');
+			}
+			function clearErrorBox() {
+				document.id('error').set('html','');
+			}
+			var quizMaker = new DG.QuizMaker({
+				questions : questions,
+				el : 'questions',
+				forceCorrectAnswer:false,
+				listeners : {
+					'finish' : showScore,
+					'missinganswer' : showAnswerAlert,
+					'sendanswer' : clearErrorBox,
+					'wrongAnswer' : showWrongAnswer
+				}
+			});
+			quizMaker.start();
+		</script>
+	</body>
+</html>
